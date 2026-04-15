@@ -1,0 +1,26 @@
+services:
+  user-service:
+    container_name: user-service
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    command: ['./command.sh']
+    depends_on:
+      - db-user-service
+
+  db-user-service:
+    container_name: db-user-service
+    image: postgres:17
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db-user-service
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

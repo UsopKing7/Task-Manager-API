@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  PENDING
+  VERIFIED
+  DISABLED
+}
+
+enum NameRol {
+  ADMIN
+  USER
+}
+
+model User {
+  id_user    String   @id @default(ulid())
+  email      String   @unique
+  password   String
+
+  status     UserStatus @default(PENDING)
+
+  roles      UserRol[]
+  verificationCodes EmailVerificationCode[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime?
+}
+
+model Role {
+  id_rol     String @id @default(ulid())
+  name       NameRol @default(USER)
+
+  users      UserRol[]
+
+  createdAt  DateTime @default(now())
+}
+
+model UserRol {
+  id_user_rol String @id @default(ulid())
+
+  id_user     String
+  id_rol      String
+
+  user        User @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+  role        Role @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
+
+  @@unique([id_user, id_rol])
+  @@index([id_user])
+  @@index([id_rol])
+}
+
+model EmailVerificationCode {
+  id_email_verification_code String @id @default(ulid())
+  id_user   String
+  code      String
+  expiresAt DateTime
+  used      Boolean @default(false)
+
+  user      User @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([id_user, used])
+  @@index([id_user, expiresAt])
+}
