@@ -8,6 +8,7 @@ import { CreateUserRolUseCase } from 'modules/UserRol/application/usecase/create
 import { IRoleRepositorie } from 'core/repositories/role.repositorie'
 import { EnumNameRol } from 'core/enum/user.enum'
 import { ROLE_REPOSITORY, USER_REPOSITORY } from 'shared/consts/tokens.nest'
+import { EmailVerifiCodeService } from 'modules/EmailVerificationCode/infrastructure/service/emailVerifiCode.service'
 
 @Injectable()
 export class CreateUserUseCase {
@@ -17,7 +18,8 @@ export class CreateUserUseCase {
 
     @Inject(ROLE_REPOSITORY)
     private readonly rolRepo: IRoleRepositorie,
-    private readonly userRolRepo: CreateUserRolUseCase
+    private readonly userRolRepo: CreateUserRolUseCase,
+    private readonly emailVerificationCode: EmailVerifiCodeService
   ) {}
 
   async execute(data: UserDTOs.CreateUserProps): Promise<UserDTOs.GetPublicData> {
@@ -33,6 +35,7 @@ export class CreateUserUseCase {
     const rol = await this.rolRepo.findByNameRol(EnumNameRol.USER)
     if (!rol) throw new Error('Rol not found')
     await this.userRolRepo.execute({ id_user: userCreated.getIdUser, id_rol: rol.getIdRol })
+    void this.emailVerificationCode.create({ id_user: userCreated.getIdUser })
     return userCreated.getPublicData
   }
 }

@@ -24,4 +24,22 @@ export class UserPrisma implements IUserRepositorie {
       deletedAt: userCreated.deletedAt
     })
   }
+
+  async findUserById(id_user: string): Promise<User | null> {
+    const user = await this.prisma.db.user.findUnique({
+      where: {
+        id_user
+      }
+    })
+
+    if (!user) return null
+
+    return User.fromPersistence({
+      id_user: user.id_user,
+      email: user.email,
+      password: user.password,
+      status: user.status as EnumUserStatus,
+      deletedAt: user.deletedAt
+    })
+  }
 }

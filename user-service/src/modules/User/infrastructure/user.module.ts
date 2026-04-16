@@ -7,9 +7,10 @@ import { UserPrisma } from './prisma/user.prisma'
 import { USER_REPOSITORY } from 'shared/consts/tokens.nest'
 import { RolModule } from 'modules/Rol/infrastructure/rol.module'
 import { UserRolModule } from 'modules/UserRol/infrastructure/userRol.module'
+import { EmailVerificationCodeModule } from 'modules/EmailVerificationCode/infrastructure/emailVerifiCode.module'
 
 @Module({
-  imports: [PrismaModule, RolModule, UserRolModule],
+  imports: [PrismaModule, RolModule, UserRolModule, EmailVerificationCodeModule],
   controllers: [UserController],
   providers: [
     UserService,
