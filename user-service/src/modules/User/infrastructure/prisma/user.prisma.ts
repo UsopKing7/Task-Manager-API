@@ -42,4 +42,38 @@ export class UserPrisma implements IUserRepositorie {
       deletedAt: user.deletedAt
     })
   }
+
+  async updateUser(id_user: string, status: EnumUserStatus): Promise<User> {
+    const userUpdated = await this.prisma.db.user.update({
+      where: { id_user },
+      data: {
+        status: status,
+        deletedAt: status === EnumUserStatus.DISABLED ? new Date() : null
+      }
+    })
+
+    return User.fromPersistence({
+      id_user: userUpdated.id_user,
+      email: userUpdated.email,
+      password: userUpdated.password,
+      status: userUpdated.status as EnumUserStatus,
+      deletedAt: userUpdated.deletedAt
+    })
+  }
+
+  async deleteUserById(id_user: string): Promise<User> {
+    const userDeleted = await this.prisma.db.user.delete({
+      where: {
+        id_user
+      }
+    })
+
+    return User.fromPersistence({
+      id_user: userDeleted.id_user,
+      email: userDeleted.email,
+      password: userDeleted.password,
+      status: userDeleted.status as EnumUserStatus,
+      deletedAt: userDeleted.deletedAt
+    })
+  }
 }

@@ -24,4 +24,50 @@ export class EmailVerificationPrisma implements IEmailVerificationCodeRepositori
       used: emailVerificationCode.used
     })
   }
+
+  async findUserByIdAndCode(id_user: string, code: string): Promise<EmailVerificationCode | null> {
+    const emailVerificationCode = await this.prisma.db.emailVerificationCode.findFirst({
+      where: {
+        id_user,
+        code
+      }
+    })
+
+    if (!emailVerificationCode) return null
+
+    return EmailVerificationCode.create({
+      id_user: emailVerificationCode.id_user,
+      code: emailVerificationCode.code,
+      expiresAt: emailVerificationCode.expiresAt,
+      used: emailVerificationCode.used,
+      id_email_verification_code: emailVerificationCode.id_email_verification_code
+    })
+  }
+
+  async update(id_email_verification_code: string, used: boolean): Promise<EmailVerificationCode> {
+    const emailVerificationCode = await this.prisma.db.emailVerificationCode.update({
+      where: {
+        id_email_verification_code
+      },
+      data: {
+        used
+      }
+    })
+
+    return EmailVerificationCode.create({
+      id_user: emailVerificationCode.id_user,
+      code: emailVerificationCode.code,
+      expiresAt: emailVerificationCode.expiresAt,
+      used: emailVerificationCode.used,
+      id_email_verification_code: emailVerificationCode.id_email_verification_code
+    })
+  }
+
+  async delete(id_user: string): Promise<void> {
+    await this.prisma.db.user.delete({
+      where: {
+        id_user
+      }
+    })
+  }
 }

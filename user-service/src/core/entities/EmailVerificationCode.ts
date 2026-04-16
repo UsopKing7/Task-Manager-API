@@ -5,11 +5,18 @@ export class EmailVerificationCode {
     private readonly id_user: string,
     private readonly code: string,
     private readonly expiresAt: Date,
-    private readonly used: boolean
+    private readonly used: boolean,
+    private readonly id_email_verification_code?: string
   ) {}
 
   static create(data: CreateEmailVerificationCodeProps): EmailVerificationCode {
-    return new EmailVerificationCode(data.id_user, data.code, data.expiresAt, data.used)
+    return new EmailVerificationCode(
+      data.id_user,
+      data.code,
+      data.expiresAt,
+      data.used,
+      data.id_email_verification_code
+    )
   }
 
   get getIdUser(): string {
@@ -26,6 +33,10 @@ export class EmailVerificationCode {
 
   get getUsed(): boolean {
     return this.used
+  }
+
+  get getIdEmailVerificationCode(): string {
+    return this.id_email_verification_code!
   }
 
   get getPublicData() {

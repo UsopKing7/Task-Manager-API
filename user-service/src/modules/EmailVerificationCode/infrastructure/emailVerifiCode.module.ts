@@ -5,11 +5,14 @@ import { EmailVerificationPrisma } from './prisma/emailVerificationCode.prisma'
 import { MailService } from 'modules/Mail/infrastructure/service/main.service'
 import { UserPrisma } from 'modules/User/infrastructure/prisma/user.prisma'
 import { EmailVerifiCodeService } from './service/emailVerifiCode.service'
+import { VerifiOTPUseCase } from '../application/usecase/verifiOTP.usucase'
+import { VerifiOtpController } from './controller/VerifiOTP.controller'
 
 @Module({
   providers: [
     EmailVerificationCodeUseCase,
     EmailVerifiCodeService,
+    VerifiOTPUseCase,
     MailService,
     {
       provide: EMAIL_VERIFICATION_CODE_REPOSITORY,
@@ -20,7 +23,8 @@ import { EmailVerifiCodeService } from './service/emailVerifiCode.service'
       useClass: UserPrisma
     }
   ],
+  controllers: [VerifiOtpController],
 
-  exports: [EmailVerifiCodeService]
+  exports: [EmailVerifiCodeService, VerifiOTPUseCase]
 })
 export class EmailVerificationCodeModule {}

@@ -3,4 +3,5 @@ export interface CreateEmailVerificationCodeProps {
   code: string
   expiresAt: Date
   used: boolean
+  id_email_verification_code?: string
 }

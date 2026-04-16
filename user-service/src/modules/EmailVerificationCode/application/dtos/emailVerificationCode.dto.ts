@@ -8,4 +8,13 @@ export namespace EmailVerifiCodeDTOs {
     expiresAt: Date
     used: boolean
   }
+
+  export interface VerifyOTP {
+    id_user: string
+    code: string
+  }
+
+  export interface ResponseOTP {
+    message: string
+  }
 }
