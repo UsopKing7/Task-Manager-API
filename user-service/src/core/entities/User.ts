@@ -4,13 +4,13 @@ import { Email } from 'core/value-objects/Email'
 import { Password } from 'core/value-objects/Password'
 
 export class User {
-  public roles: string[] = []
   constructor(
     private readonly email: Email,
     private readonly password: Password,
     private readonly status: EnumUserStatus,
     private readonly deletedAt?: Date | null,
-    private readonly id_user?: string
+    private readonly id_user?: string,
+    private readonly roles: string[] = []
   ) {}
 
   static fromPersistence(data: {
@@ -19,13 +19,15 @@ export class User {
     password: string
     status: EnumUserStatus
     deletedAt?: Date | null
+    roles?: string[]
   }): User {
     return new User(
       new Email(data.email),
       Password.fromHash(data.password),
       data.status,
       data.deletedAt,
-      data.id_user
+      data.id_user,
+      data.roles || []
     )
   }
 
@@ -60,5 +62,9 @@ export class User {
 
   get getDeletedAt(): Date | null {
     return this.deletedAt!
+  }
+
+  get getRoles(): string[] {
+    return this.roles
   }
 }

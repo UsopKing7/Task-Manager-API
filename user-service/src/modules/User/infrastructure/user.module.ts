@@ -8,6 +8,7 @@ import { USER_REPOSITORY } from 'shared/consts/tokens.nest'
 import { RolModule } from 'modules/Rol/infrastructure/rol.module'
 import { UserRolModule } from 'modules/UserRol/infrastructure/userRol.module'
 import { EmailVerificationCodeModule } from 'modules/EmailVerificationCode/infrastructure/emailVerifiCode.module'
+import { LoginUserUseCase } from '../application/usecase/login-user.usecase'
 
 @Module({
   imports: [PrismaModule, RolModule, UserRolModule, EmailVerificationCodeModule],
@@ -15,6 +16,7 @@ import { EmailVerificationCodeModule } from 'modules/EmailVerificationCode/infra
   providers: [
     UserService,
     CreateUserUseCase,
+    LoginUserUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: UserPrisma

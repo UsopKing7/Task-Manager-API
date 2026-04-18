@@ -6,4 +6,5 @@ export abstract class IUserRepositorie {
   abstract findUserById(id_user: string): Promise<User | null>
   abstract updateUser(id_user: string, status: EnumUserStatus): Promise<User>
   abstract deleteUserById(id_user: string): Promise<User>
+  abstract findUserByEmail(email: string): Promise<User | null>
 }

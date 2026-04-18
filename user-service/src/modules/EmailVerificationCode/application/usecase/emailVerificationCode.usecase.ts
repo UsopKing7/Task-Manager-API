@@ -31,7 +31,7 @@ export class EmailVerificationCodeUseCase {
     const emailVerifiCodeCreated =
       await this.emailVerificationCodeRepo.create(emailVerificationCode)
 
-    await this.mailService.sendOTP(user.getEmail, code)
+    void this.mailService.sendOTP(user.getEmail, code)
     return emailVerifiCodeCreated.getPublicData
   }
 

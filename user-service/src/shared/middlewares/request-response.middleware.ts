@@ -4,17 +4,22 @@ import { Request, Response } from 'express'
 @Catch()
 @Injectable()
 export class GlobalExceptionFilterMiddleware implements ExceptionFilter {
-  catch(error: Error, host: ArgumentsHost) {
+  catch(error: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const res = ctx.getResponse<Response>()
     const req = ctx.getRequest<Request>()
-
-    const statusCode = error instanceof HttpException ? error.getStatus() : 400
+    const isHttp = error instanceof HttpException
+    const statusCode = isHttp ? error.getStatus() : 500
+    const message = isHttp
+      ? error.getResponse()
+      : error instanceof Error
+        ? error.message
+        : 'Internal server error'
 
     res.status(statusCode).json({
       success: false,
       statusCode,
-      message: error.message,
+      message,
       timestamp: new Date().toISOString(),
       path: req.url
     })

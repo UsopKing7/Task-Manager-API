@@ -10,4 +10,15 @@ export namespace UserDTOs {
     status: string
     roles: string[]
   }
+
+  export interface LoginResponse {
+    user: GetPublicData
+    token: string
+    cookieOptions: object
+  }
+
+  export interface LoginUserProps {
+    email: string
+    password: string
+  }
 }

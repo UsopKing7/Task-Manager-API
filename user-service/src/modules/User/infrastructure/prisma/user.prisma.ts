@@ -49,7 +49,8 @@ export class UserPrisma implements IUserRepositorie {
       data: {
         status: status,
         deletedAt: status === EnumUserStatus.DISABLED ? new Date() : null
-      }
+      },
+      include: { roles: { include: { role: true } } }
     })
 
     return User.fromPersistence({
@@ -74,6 +75,23 @@ export class UserPrisma implements IUserRepositorie {
       password: userDeleted.password,
       status: userDeleted.status as EnumUserStatus,
       deletedAt: userDeleted.deletedAt
+    })
+  }
+
+  async findUserByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.db.user.findUnique({
+      where: { email },
+      include: { roles: { include: { role: true } } }
+    })
+
+    if (!user) return null
+    return User.fromPersistence({
+      id_user: user.id_user,
+      email: user.email,
+      password: user.password,
+      status: user.status as EnumUserStatus,
+      deletedAt: user.deletedAt,
+      roles: user.roles.map(role => role.role.name)
     })
   }
 }

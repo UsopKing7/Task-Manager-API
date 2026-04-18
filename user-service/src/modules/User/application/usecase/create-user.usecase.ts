@@ -9,6 +9,7 @@ import { IRoleRepositorie } from 'core/repositories/role.repositorie'
 import { EnumNameRol } from 'core/enum/user.enum'
 import { ROLE_REPOSITORY, USER_REPOSITORY } from 'shared/consts/tokens.nest'
 import { EmailVerifiCodeService } from 'modules/EmailVerificationCode/infrastructure/service/emailVerifiCode.service'
+import { UserErrors } from 'core/errors/user.error'
 
 @Injectable()
 export class CreateUserUseCase {
@@ -33,7 +34,7 @@ export class CreateUserUseCase {
 
     const userCreated = await this.userRepo.create(user)
     const rol = await this.rolRepo.findByNameRol(EnumNameRol.USER)
-    if (!rol) throw new Error('Rol not found')
+    if (!rol) throw new UserErrors.UserNotFoundError()
     await this.userRolRepo.execute({ id_user: userCreated.getIdUser, id_rol: rol.getIdRol })
     void this.emailVerificationCode.create({ id_user: userCreated.getIdUser })
     return userCreated.getPublicData
