@@ -17,6 +17,11 @@ enum NameRol {
   USER
 }
 
+enum GenderType {
+  MALE
+  FEMALE
+}
+
 model User {
   id_user    String   @id @default(ulid())
   email      String   @unique
@@ -26,6 +31,7 @@ model User {
 
   roles      UserRol[]
   verificationCodes EmailVerificationCode[]
+  userInformation   UserInformation[]
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -68,4 +74,19 @@ model EmailVerificationCode {
 
   @@index([id_user, used])
   @@index([id_user, expiresAt])
+}
+
+model UserInformation {
+  id_user_information     String @id @default(ulid())
+  id_user                 String @unique
+  nick_name               String @unique
+  age                     Int
+  gender                  GenderType
+
+  user                    User @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@unique([id_user, nick_name])
 }
