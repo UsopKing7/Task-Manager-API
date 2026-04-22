@@ -36,7 +36,7 @@ export class VerifiOtpChangePasswordUseCase {
     })
 
     return {
-      message: 'OTP verified',
+      message: 'OTP verified successfully to change password',
       token,
       cookieOptions: {
         httpOnly: true,

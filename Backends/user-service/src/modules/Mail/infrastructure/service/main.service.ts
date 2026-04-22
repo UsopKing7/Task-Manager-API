@@ -345,12 +345,7 @@ export class MailService {
                   
                   <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px;">
                     La contraseña asociada a su cuenta <span style="color: #222222; font-weight: 500;">${email}</span> ha sido modificada correctamente.
-                  </p>
-                  
-                  <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 32px;">
-                    Este cambio se realizó el <span style="color: #222222; font-weight: 500;">${new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>.
-                  </p>
-                  
+                  </p>  
                   <!-- Confirmation Box -->
                   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 32px; background-color: #fafafa; border: 1px solid #e0e0e0;">
                     <tr>

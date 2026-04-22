@@ -21,4 +21,8 @@ export namespace UserDTOs {
     email: string
     password: string
   }
+
+  export interface ResponseMessage {
+    message: string
+  }
 }

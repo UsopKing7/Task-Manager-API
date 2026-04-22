@@ -94,4 +94,13 @@ export class UserPrisma implements IUserRepositorie {
       roles: user.roles.map(role => role.role.name)
     })
   }
+
+  async changePassword(id_user: string, password: string): Promise<void> {
+    await this.prisma.db.user.update({
+      where: { id_user },
+      data: {
+        password: password
+      }
+    })
+  }
 }
