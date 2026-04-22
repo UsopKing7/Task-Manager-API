@@ -17,7 +17,7 @@ export class VerifiOTPUseCase {
     private readonly mailService: MailService
   ) {}
 
-  async execute(data: EmailVerifiCodeDTOs.VerifyOTP): Promise<EmailVerifiCodeDTOs.ResponseOTP> {
+  async execute(data: EmailVerifiCodeDTOs.VerifyOTP): Promise<EmailVerifiCodeDTOs.ResponseMessage> {
     const user = await this.ensureUserExists(data.id_user)
     const otp = await this.emailVerifiCodeRepo.findUserByIdAndCode(data.id_user, data.code)
 

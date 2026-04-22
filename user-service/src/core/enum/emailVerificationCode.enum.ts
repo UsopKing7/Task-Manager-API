@@ -1,0 +1,4 @@
+export enum EnumOtpType {
+  VERIFI_EMAIL = 'VERIFI_EMAIL',
+  RESET_PASSWORD = 'RESET_PASSWORD'
+}

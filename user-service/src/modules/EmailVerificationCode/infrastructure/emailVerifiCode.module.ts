@@ -7,12 +7,16 @@ import { UserPrisma } from 'modules/User/infrastructure/prisma/user.prisma'
 import { EmailVerifiCodeService } from './service/emailVerifiCode.service'
 import { VerifiOTPUseCase } from '../application/usecase/verifiOTP.usucase'
 import { VerifiOtpController } from './controller/VerifiOTP.controller'
+import { ChangePasswordUseCase } from '../application/usecase/changePassword.usecase'
+import { VerifiOtpChangePasswordUseCase } from '../application/usecase/verifiOtpChangePassword.usecase'
 
 @Module({
   providers: [
     EmailVerificationCodeUseCase,
+    ChangePasswordUseCase,
     EmailVerifiCodeService,
     VerifiOTPUseCase,
+    VerifiOtpChangePasswordUseCase,
     MailService,
     {
       provide: EMAIL_VERIFICATION_CODE_REPOSITORY,
@@ -25,6 +29,6 @@ import { VerifiOtpController } from './controller/VerifiOTP.controller'
   ],
   controllers: [VerifiOtpController],
 
-  exports: [EmailVerifiCodeService, VerifiOTPUseCase]
+  exports: [EmailVerifiCodeService, VerifiOTPUseCase, VerifiOtpChangePasswordUseCase]
 })
 export class EmailVerificationCodeModule {}

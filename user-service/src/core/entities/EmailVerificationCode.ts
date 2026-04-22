@@ -1,3 +1,4 @@
+import { EnumOtpType } from 'core/enum/emailVerificationCode.enum'
 import { CreateEmailVerificationCodeProps } from 'core/interfaces/emailVerificationCode.interface'
 
 export class EmailVerificationCode {
@@ -6,6 +7,7 @@ export class EmailVerificationCode {
     private readonly code: string,
     private readonly expiresAt: Date,
     private readonly used: boolean,
+    private readonly type: EnumOtpType,
     private readonly id_email_verification_code?: string
   ) {}
 
@@ -15,6 +17,7 @@ export class EmailVerificationCode {
       data.code,
       data.expiresAt,
       data.used,
+      data.type,
       data.id_email_verification_code
     )
   }
@@ -33,6 +36,10 @@ export class EmailVerificationCode {
 
   get getUsed(): boolean {
     return this.used
+  }
+
+  get getTypeOtp(): EnumOtpType {
+    return this.type
   }
 
   get getIdEmailVerificationCode(): string {

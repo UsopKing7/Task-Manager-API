@@ -14,7 +14,21 @@ export namespace EmailVerifiCodeDTOs {
     code: string
   }
 
+  export interface VerifiOtpChaangePassword {
+    code: string
+  }
+
   export interface ResponseOTP {
     message: string
+    token: string
+    cookieOptions: object
+  }
+
+  export interface ResponseMessage {
+    message: string
+  }
+
+  export interface ChangePassword {
+    email: string
   }
 }

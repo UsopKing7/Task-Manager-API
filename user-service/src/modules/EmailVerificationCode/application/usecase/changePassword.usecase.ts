@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@nestjs/common'
 import { IEmailVerificationCodeRepositorie } from 'core/repositories/emailVerificationCode.repositorie'
 import { EmailVerifiCodeDTOs } from '../dtos/emailVerificationCode.dto'
 import { EmailVerificationCode } from 'core/entities/EmailVerificationCode'
-import { IUserRepositorie } from 'core/repositories/user.repositorie'
-import { MailService } from 'modules/Mail/infrastructure/service/main.service'
 import { EMAIL_VERIFICATION_CODE_REPOSITORY, USER_REPOSITORY } from 'shared/consts/tokens.nest'
+import { IUserRepositorie } from 'core/repositories/user.repositorie'
 import { EnumOtpType } from 'core/enum/emailVerificationCode.enum'
+import { MailService } from 'modules/Mail/infrastructure/service/main.service'
 
 @Injectable()
-export class EmailVerificationCodeUseCase {
+export class ChangePasswordUseCase {
   constructor(
     @Inject(EMAIL_VERIFICATION_CODE_REPOSITORY)
     private readonly emailVerificationCodeRepo: IEmailVerificationCodeRepositorie,
@@ -18,23 +18,30 @@ export class EmailVerificationCodeUseCase {
     private readonly mailService: MailService
   ) {}
 
-  async execute(data: EmailVerifiCodeDTOs.Create): Promise<EmailVerifiCodeDTOs.Response> {
-    const user = await this.ensureUserExists(data.id_user)
+  async execute(data: EmailVerifiCodeDTOs.ChangePassword): Promise<EmailVerifiCodeDTOs.Response> {
+    const user = await this.ensureEmailExists(data.email)
     const code = this.generateOTP()
     const expiresAt = this.generateExipiration()
     const emailVerificationCode = EmailVerificationCode.create({
-      id_user: data.id_user,
+      id_user: user.getIdUser,
       code,
       expiresAt,
-      type: EnumOtpType.VERIFI_EMAIL,
+      type: EnumOtpType.RESET_PASSWORD,
       used: false
     })
 
     const emailVerifiCodeCreated =
       await this.emailVerificationCodeRepo.create(emailVerificationCode)
 
-    void this.mailService.sendOTP(user.getEmail, code)
+    void this.mailService.sendOtpChangePassword(user.getEmail, code)
+
     return emailVerifiCodeCreated.getPublicData
+  }
+
+  private async ensureEmailExists(email: string) {
+    const user = await this.userRepo.findUserByEmail(email)
+    if (!user) throw new Error('User not exist with this email')
+    return user
   }
 
   private generateOTP = (): string => {
@@ -45,11 +52,5 @@ export class EmailVerificationCodeUseCase {
     const now = new Date()
     now.setMinutes(now.getMinutes() + min)
     return now
-  }
-
-  private readonly ensureUserExists = async (id_user: string) => {
-    const user = await this.userRepo.findUserById(id_user)
-    if (!user) throw new Error('User not found')
-    return user
   }
 }

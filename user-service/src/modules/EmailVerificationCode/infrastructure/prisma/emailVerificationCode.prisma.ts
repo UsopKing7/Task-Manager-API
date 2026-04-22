@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { EmailVerificationCode } from 'core/entities/EmailVerificationCode'
+import { EnumOtpType } from 'core/enum/emailVerificationCode.enum'
 import { IEmailVerificationCodeRepositorie } from 'core/repositories/emailVerificationCode.repositorie'
 import { PrismaService } from 'shared/configs/prisma/prisma.service'
 
@@ -12,6 +13,7 @@ export class EmailVerificationPrisma implements IEmailVerificationCodeRepositori
       data: {
         id_user: data.getIdUser,
         code: data.getCode,
+        type: data.getTypeOtp,
         expiresAt: data.getExpiredAt,
         used: data.getUsed
       }
@@ -20,6 +22,7 @@ export class EmailVerificationPrisma implements IEmailVerificationCodeRepositori
     return EmailVerificationCode.create({
       id_user: emailVerificationCode.id_user,
       code: emailVerificationCode.code,
+      type: emailVerificationCode.type as EnumOtpType,
       expiresAt: emailVerificationCode.expiresAt,
       used: emailVerificationCode.used
     })
@@ -38,6 +41,7 @@ export class EmailVerificationPrisma implements IEmailVerificationCodeRepositori
     return EmailVerificationCode.create({
       id_user: emailVerificationCode.id_user,
       code: emailVerificationCode.code,
+      type: emailVerificationCode.type as EnumOtpType,
       expiresAt: emailVerificationCode.expiresAt,
       used: emailVerificationCode.used,
       id_email_verification_code: emailVerificationCode.id_email_verification_code
@@ -57,6 +61,7 @@ export class EmailVerificationPrisma implements IEmailVerificationCodeRepositori
     return EmailVerificationCode.create({
       id_user: emailVerificationCode.id_user,
       code: emailVerificationCode.code,
+      type: emailVerificationCode.type as EnumOtpType,
       expiresAt: emailVerificationCode.expiresAt,
       used: emailVerificationCode.used,
       id_email_verification_code: emailVerificationCode.id_email_verification_code
@@ -64,10 +69,33 @@ export class EmailVerificationPrisma implements IEmailVerificationCodeRepositori
   }
 
   async delete(id_user: string): Promise<void> {
-    await this.prisma.db.user.delete({
+    await this.prisma.db.user.update({
       where: {
         id_user
+      },
+      data: {
+        deletedAt: new Date()
       }
+    })
+  }
+
+  async findByCode(code: string, type: EnumOtpType): Promise<EmailVerificationCode | null> {
+    const otp = await this.prisma.db.emailVerificationCode.findFirst({
+      where: {
+        code,
+        type,
+        used: false
+      }
+    })
+
+    if (!otp) return null
+    return EmailVerificationCode.create({
+      id_email_verification_code: otp.id_email_verification_code,
+      id_user: otp.id_user,
+      code: otp.code,
+      type: otp.type as EnumOtpType,
+      expiresAt: otp.expiresAt,
+      used: otp.used
     })
   }
 }
