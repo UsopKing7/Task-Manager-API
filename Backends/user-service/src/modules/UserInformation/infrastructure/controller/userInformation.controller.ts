@@ -3,11 +3,26 @@ import { UserInformationService } from '../service/userInformation.service'
 import { EnumGender } from 'core/enum/userInformation.enum'
 import { AuthGuard } from 'shared/middlewares/rutaPotected.middleware'
 import { CurrentUser } from 'shared/utils/CurrentUser'
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiCookieAuth } from '@nestjs/swagger'
 
+@ApiTags('User Information')
 @Controller('api')
 export class UserInformationController {
   constructor(private readonly userInformationService: UserInformationService) {}
 
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Crear perfil de usuario' })
+  @ApiBody({
+    schema: {
+      example: {
+        nick_name: 'johndoe',
+        age: 25,
+        gender: 'MALE'
+      }
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Información de usuario creada' })
+  @ApiResponse({ status: 401, description: 'No autenticado' })
   @UseGuards(AuthGuard)
   @Post('create/userInformation')
   @HttpCode(201)

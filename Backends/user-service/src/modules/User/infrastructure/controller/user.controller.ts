@@ -5,11 +5,23 @@ import { UserService } from '../service/user.service'
 import { access_token } from 'shared/consts/keysJwt'
 import { CurrentUser } from 'shared/utils/CurrentUser'
 import { AuthGuard } from 'shared/middlewares/rutaPotected.middleware'
+import { ApiBody, ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('User')
 @Controller('api')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  @ApiOperation({ summary: 'Registrar nuevo usuario' })
+  @ApiBody({
+    schema: {
+      example: {
+        email: 'user@gmail.com',
+        password: 'Secure123!'
+      }
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Usuario creado exitosamente' })
+  @ApiResponse({ status: 400, description: 'Validación fallida' })
   @Post('register')
   @HttpCode(201)
   async register(@Body() data: UserDTOs.CreateUserProps) {
@@ -17,6 +29,17 @@ export class UserController {
     return { user }
   }
 
+  @ApiOperation({ summary: 'Login — setea cookie access_token' })
+  @ApiBody({
+    schema: {
+      example: {
+        email: 'user@gmail.com',
+        password: 'Secure123!'
+      }
+    }
+  })
+  @ApiResponse({ status: 200, description: 'Login exitoso — cookie access_token seteada' })
+  @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
   @Post('login')
   @HttpCode(200)
   async login(@Body() data: UserDTOs.LoginUserProps, @Res() res: Response) {
@@ -25,6 +48,17 @@ export class UserController {
     return res.json({ user })
   }
 
+  @ApiCookieAuth('access_token')
+  @ApiOperation({ summary: 'Resetear contraseña — requiere cookie del verify-otp-change-password' })
+  @ApiBody({
+    schema: {
+      example: {
+        password: 'NewSecure123!'
+      }
+    }
+  })
+  @ApiResponse({ status: 200, description: 'Contraseña actualizada exitosamente' })
+  @ApiResponse({ status: 401, description: 'No autenticado' })
   @UseGuards(AuthGuard)
   @Patch('reset-password')
   async changePassword(
