@@ -5,6 +5,7 @@ import { EMAIL_VERIFICATION_CODE_REPOSITORY, USER_REPOSITORY } from 'shared/cons
 import { EmailVerifiCodeDTOs } from '../dtos/emailVerificationCode.dto'
 import { EnumOtpType } from 'core/enum/emailVerificationCode.enum'
 import { generateToken } from 'shared/utils/generateToken'
+import { EmailVerificationCodeErrors } from 'core/errors/EmailVerificationCode.error'
 
 @Injectable()
 export class VerifiOtpChangePasswordUseCase {
@@ -21,12 +22,12 @@ export class VerifiOtpChangePasswordUseCase {
   ): Promise<EmailVerifiCodeDTOs.ResponseOTP> {
     const otp = await this.emailVerifiCode.findByCode(data.code, EnumOtpType.RESET_PASSWORD)
 
-    if (!otp) throw new Error('OTP not found')
-    if (otp.getUsed) throw new Error('OTP already used')
-    if (otp.getExpiredAt < new Date()) throw new Error('OTP expired')
+    if (!otp) throw new EmailVerificationCodeErrors.OtpNotFound()
+    if (otp.getUsed) throw new EmailVerificationCodeErrors.OtpAlreadyUsed()
+    if (otp.getExpiredAt < new Date()) throw new EmailVerificationCodeErrors.OtpExpired()
 
     const user = await this.userRepo.findUserById(otp.getIdUser)
-    if (!user) throw new Error('User not found')
+    if (!user) throw new EmailVerificationCodeErrors.UserNotFound()
     await this.emailVerifiCode.update(otp.getIdEmailVerificationCode, true)
 
     const token = generateToken({

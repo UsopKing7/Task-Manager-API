@@ -6,6 +6,7 @@ import { EMAIL_VERIFICATION_CODE_REPOSITORY, USER_REPOSITORY } from 'shared/cons
 import { IUserRepositorie } from 'core/repositories/user.repositorie'
 import { EnumOtpType } from 'core/enum/emailVerificationCode.enum'
 import { MailService } from 'modules/Mail/infrastructure/service/main.service'
+import { EmailVerificationCodeErrors } from 'core/errors/EmailVerificationCode.error'
 
 @Injectable()
 export class ChangePasswordUseCase {
@@ -40,7 +41,7 @@ export class ChangePasswordUseCase {
 
   private async ensureEmailExists(email: string) {
     const user = await this.userRepo.findUserByEmail(email)
-    if (!user) throw new Error('User not exist with this email')
+    if (!user) throw new EmailVerificationCodeErrors.UserNotExistsWithThisEmail()
     return user
   }
 

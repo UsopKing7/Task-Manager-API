@@ -12,4 +12,11 @@ export namespace UserInformationErrors {
       this.name = 'UserInformationAlreadyExistsError'
     }
   }
+
+  export class UserInformationNotExists extends Error {
+    constructor() {
+      super('User information not exists')
+      this.name = 'UserInformationNotExistsError'
+    }
+  }
 }

@@ -6,6 +6,7 @@ import { IUserRepositorie } from 'core/repositories/user.repositorie'
 import { MailService } from 'modules/Mail/infrastructure/service/main.service'
 import { EMAIL_VERIFICATION_CODE_REPOSITORY, USER_REPOSITORY } from 'shared/consts/tokens.nest'
 import { EnumOtpType } from 'core/enum/emailVerificationCode.enum'
+import { EmailVerificationCodeErrors } from 'core/errors/EmailVerificationCode.error'
 
 @Injectable()
 export class EmailVerificationCodeUseCase {
@@ -49,7 +50,7 @@ export class EmailVerificationCodeUseCase {
 
   private readonly ensureUserExists = async (id_user: string) => {
     const user = await this.userRepo.findUserById(id_user)
-    if (!user) throw new Error('User not found')
+    if (!user) throw new EmailVerificationCodeErrors.UserNotFound()
     return user
   }
 }

@@ -1,10 +1,20 @@
-const { PORT, SALT, EMAIL, PASSWORD, SECRET_KEY, EXPIRES_IN } = process.env
+import z from 'zod'
 
-export const env = {
-  PORT: Number(PORT) || 3000,
-  SALT: Number(SALT) || 10,
-  EMAIL: String(EMAIL),
-  PASSWORD: String(PASSWORD),
-  SECRET_KEY: String(SECRET_KEY),
-  EXPIRES_IN: EXPIRES_IN
+const envSchema = z.object({
+  PORT: z.coerce.number().default(3000),
+  SALT: z.coerce.number().default(10),
+  EMAIL: z.string().min(1, 'EMAIL is required'),
+  PASSWORD: z.string().min(1, 'PASSWORD is required'),
+  SECRET_KEY: z.string().min(1, 'SECRET_KEY is required'),
+  EXPIRES_IN: z.coerce.number().default(86400000)
+})
+
+const parsed = envSchema.safeParse(process.env)
+
+if (!parsed.success) {
+  console.log('[X][ERROR][ENV] Invalid environment variables:')
+  console.table(parsed.error.flatten().fieldErrors)
+  process.exit(1)
 }
+
+export const env = parsed.data
