@@ -6,7 +6,7 @@ import { PrismaService } from 'shared/configs/prisma/prisma.service'
 
 @Injectable()
 export class UserPrisma implements IUserRepositorie {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(data: User): Promise<User> {
     const userCreated = await this.prisma.db.user.create({
@@ -27,9 +27,8 @@ export class UserPrisma implements IUserRepositorie {
 
   async findUserById(id_user: string): Promise<User | null> {
     const user = await this.prisma.db.user.findUnique({
-      where: {
-        id_user
-      }
+      where: { id_user },
+      include: { roles: { include: { role: true } } }
     })
 
     if (!user) return null
@@ -39,7 +38,8 @@ export class UserPrisma implements IUserRepositorie {
       email: user.email,
       password: user.password,
       status: user.status as EnumUserStatus,
-      deletedAt: user.deletedAt
+      deletedAt: user.deletedAt,
+      roles: user.roles.map(role => role.role.name)
     })
   }
 
