@@ -7,20 +7,20 @@ sinColor='\033[0m'
 
 # Función para mostrar barra de carga con puntos animados
 mostrar_carga() {
-    # shellcheck disable=SC3043
-    # shellcheck disable=SC2086
-    local mensaje=$1
+  # shellcheck disable=SC3043
+  # shellcheck disable=SC2086
+  local mensaje=$1
+  # shellcheck disable=SC3037
+  echo -ne "${colorAzul}| Cargando $mensaje"
+  # shellcheck disable=SC2034
+  # shellcheck disable=SC3009
+  for i in {1..3}; do
     # shellcheck disable=SC3037
-    echo -ne "${colorAzul}| Cargando $mensaje"
-    # shellcheck disable=SC2034
-    # shellcheck disable=SC3009
-    for i in {1..3}; do
-        # shellcheck disable=SC3037
-        echo -ne "."
-        sleep 0.5
-    done
-    # shellcheck disable=SC3037
-    echo -e "${sinColor}"
+    echo -ne "."
+    sleep 0.5
+  done
+  # shellcheck disable=SC3037
+  echo -e "${sinColor}"
 }
 
 # shellcheck disable=SC3037

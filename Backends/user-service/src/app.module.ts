@@ -7,5 +7,4 @@ import { RedisModule } from 'shared/configs/redis/redis.module'
 @Module({
   imports: [PrismaModule, RedisModule, UserModule, UserInformationModule]
 })
-export class AppModule { }
-
+export class AppModule {}
