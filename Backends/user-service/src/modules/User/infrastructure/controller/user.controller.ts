@@ -10,7 +10,7 @@ import { ApiBody, ApiCookieAuth, ApiOperation, ApiResponse, ApiTags } from '@nes
 @ApiTags('User')
 @Controller('api')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
   @ApiOperation({ summary: 'Registrar nuevo usuario' })
   @ApiBody({
     schema: {
@@ -72,9 +72,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Informacion del usuario' })
   @UseGuards(AuthGuard)
   @Get('me')
-  async getUser(
-    @CurrentUser('id_user') id_user: string
-  ): Promise<{
+  async getUser(@CurrentUser('id_user') id_user: string): Promise<{
     user: UserDTOs.GetPublicData
   }> {
     const user = await this.userService.getUser(id_user)
@@ -94,4 +92,3 @@ export class UserController {
     return res.json({ message: 'Logout exitoso' })
   }
 }
-

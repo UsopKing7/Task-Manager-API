@@ -32,4 +32,3 @@ import { LogoutUseCase } from 'modules/User/application/usecase/logout.usecase'
   ]
 })
 export class UserModule {}
-
