@@ -12,6 +12,7 @@ import { LoginUserUseCase } from '../application/usecase/login-user.usecase'
 import { ChangePasswordUseCase } from '../application/usecase/change-password.usecase'
 import { MailService } from 'modules/Mail/infrastructure/service/main.service'
 import { GetUserUseCase } from '../application/usecase/get-user.usecase'
+import { LogoutUseCase } from '../application/usecase/logout.usecase'
 
 @Module({
   imports: [PrismaModule, RolModule, UserRolModule, EmailVerificationCodeModule],
@@ -22,6 +23,7 @@ import { GetUserUseCase } from '../application/usecase/get-user.usecase'
     LoginUserUseCase,
     ChangePasswordUseCase,
     GetUserUseCase,
+    LogoutUseCase,
     MailService,
     {
       provide: USER_REPOSITORY,

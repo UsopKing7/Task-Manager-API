@@ -11,7 +11,7 @@ export class User {
     private readonly deletedAt?: Date | null,
     private readonly id_user?: string,
     private readonly roles: string[] = []
-  ) {}
+  ) { }
 
   static fromPersistence(data: {
     id_user: string

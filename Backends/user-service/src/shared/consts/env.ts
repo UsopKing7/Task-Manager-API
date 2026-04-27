@@ -6,7 +6,8 @@ const envSchema = z.object({
   EMAIL: z.string().min(1, 'EMAIL is required'),
   PASSWORD: z.string().min(1, 'PASSWORD is required'),
   SECRET_KEY: z.string().min(1, 'SECRET_KEY is required'),
-  EXPIRES_IN: z.coerce.number().default(86400000)
+  EXPIRES_IN: z.coerce.number().default(86400000),
+  REDIS_URL: z.string().min(1, 'REDIS_HOST is required'),
 })
 
 const parsed = envSchema.safeParse(process.env)
@@ -18,3 +19,4 @@ if (!parsed.success) {
 }
 
 export const env = parsed.data
+

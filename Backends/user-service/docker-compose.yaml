@@ -9,6 +9,8 @@ services:
     command: ['./command.sh']
     depends_on:
       - db-user-service
+    networks:
+      - task-manager-network
 
   db-user-service:
     container_name: db-user-service
@@ -21,6 +23,13 @@ services:
       POSTGRES_DB: db-user-service
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - task-manager-network
+
+networks:
+  task-manager-network:
+    external: true
 
 volumes:
   db-data:
+

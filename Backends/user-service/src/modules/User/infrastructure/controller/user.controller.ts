@@ -1,5 +1,5 @@
-import { Body, Controller, Get, HttpCode, Patch, Post, Res, UseGuards } from '@nestjs/common'
-import { type Response } from 'express'
+import { Body, Controller, Get, HttpCode, Patch, Post, Req, Res, UseGuards } from '@nestjs/common'
+import { type Response, type Request } from 'express'
 import { type UserDTOs } from 'modules/User/application/dtos/user.dto'
 import { UserService } from '../service/user.service'
 import { access_token } from 'shared/consts/keysJwt'
@@ -79,6 +79,19 @@ export class UserController {
   }> {
     const user = await this.userService.getUser(id_user)
     return { user: user.user }
+  }
+
+  @ApiCookieAuth('access_token')
+  @ApiResponse({ status: 200, description: 'Logout exitoso' })
+  @ApiResponse({ status: 401, description: 'No autenticado' })
+  @UseGuards(AuthGuard)
+  @Post('logout')
+  @HttpCode(200)
+  async logout(@Req() req: Request, @Res() res: Response) {
+    const token = req.cookies?.['access_token']
+    await this.userService.logout(token)
+    res.clearCookie(access_token)
+    return res.json({ message: 'Logout exitoso' })
   }
 }
 

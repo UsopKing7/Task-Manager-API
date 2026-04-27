@@ -14,7 +14,7 @@ export class LoginUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepo: IUserRepositorie
-  ) {}
+  ) { }
 
   async execute(data: UserDTOs.LoginUserProps): Promise<UserDTOs.LoginResponse> {
     const emailVO = new Email(data.email)

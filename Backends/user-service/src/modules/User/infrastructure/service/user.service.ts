@@ -4,6 +4,7 @@ import { ChangePasswordUseCase } from 'modules/User/application/usecase/change-p
 import { CreateUserUseCase } from 'modules/User/application/usecase/create-user.usecase'
 import { GetUserUseCase } from 'modules/User/application/usecase/get-user.usecase'
 import { LoginUserUseCase } from 'modules/User/application/usecase/login-user.usecase'
+import { LogoutUseCase } from 'modules/User/application/usecase/logout.usecase'
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,8 @@ export class UserService {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly loginUserUseCase: LoginUserUseCase,
     private readonly changePasswordUseCase: ChangePasswordUseCase,
-    private readonly getUserUseCase: GetUserUseCase
+    private readonly getUserUseCase: GetUserUseCase,
+    private readonly logoutUseCase: LogoutUseCase
   ) { }
 
   async createUser(data: UserDTOs.CreateUserProps): Promise<UserDTOs.GetPublicData> {
@@ -31,6 +33,10 @@ export class UserService {
   async getUser(id_user: string): Promise<{ user: UserDTOs.GetPublicData }> {
     const user = await this.getUserUseCase.execute(id_user)
     return { user }
+  }
+
+  async logout(token: string): Promise<void> {
+    await this.logoutUseCase.execute(token)
   }
 }
 
